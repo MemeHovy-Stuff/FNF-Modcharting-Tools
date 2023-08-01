@@ -63,6 +63,10 @@ import utilities.NoteVariables;
 import states.LoadingState;
 import states.MusicBeatState;
 import substates.MusicBeatSubstate;
+#elseif PSYCH
+import backend.Section.SwagSection;
+import backend.Song.SwagSong;
+import backend.MusicBeatSubstate;
 #else
 import Section.SwagSection;
 import Song.SwagSong;

@@ -10,7 +10,10 @@ import flixel.FlxG;
 import states.PlayState;
 import game.Note;
 import game.Conductor;
-#else 
+#elseif PSYCH
+import objects.Note;
+import states.PlayState;
+#else
 import PlayState;
 import Note;
 #end

@@ -8,8 +8,10 @@ import flixel.FlxG;
 #if LEATHER
 import states.PlayState;
 import game.Note;
-
-#else 
+#elseif PSYCH
+import objects.Note;
+import states.PlayState;
+#else
 import PlayState;
 import Note;
 #end

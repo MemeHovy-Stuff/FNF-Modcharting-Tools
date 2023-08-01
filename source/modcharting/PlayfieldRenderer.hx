@@ -23,7 +23,11 @@ import states.PlayState;
 import game.Note;
 import game.StrumNote;
 import game.Conductor;
-#else 
+#elseif PSYCH
+import objects.StrumNote;
+import objects.Note;
+import states.PlayState;
+#else
 import PlayState;
 import Note;
 #end
@@ -38,7 +42,7 @@ using StringTools;
 //finish setting up tooltips in editor
 //start documenting more stuff idk
 
-typedef StrumNoteType = 
+typedef StrumNoteType =
 #if (PSYCH || LEATHER) StrumNote
 #elseif KADE StaticArrow
 #elseif FOREVER_LEGACY UIStaticArrow
