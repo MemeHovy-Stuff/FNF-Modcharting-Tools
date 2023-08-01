@@ -15,6 +15,14 @@ import states.PlayState;
 import game.Conductor;
 #end
 
+#if PSYCH
+#if LUA_ALLOWED
+import psychlua.FunkinLua;
+#end
+import shaders.ColorSwap;
+import backend.*;
+#end
+
 import modcharting.Modifier;
 import modcharting.PlayfieldRenderer;
 import modcharting.NoteMovement;
@@ -34,8 +42,8 @@ class ModchartFuncs
         #if LUA_ALLOWED
         for (funkin in PlayState.instance.luaArray)
         {
-            #if hscript
-            funkin.initHaxeModule();
+            #if SScript
+            psychlua.HScript.initHaxeModule(funkin);
             #end
             Lua_helper.add_callback(funkin.lua, 'startMod', function(name:String, modClass:String, type:String = '', pf:Int = -1){
                 startMod(name,modClass,type,pf);
@@ -79,16 +87,16 @@ class ModchartFuncs
             });
         }
         #end
-        #if hscript
-        if (FunkinLua.hscript != null)
+        #if SScript
+        if (FunkinLua.instance.hscript != null)
         {
-            FunkinLua.hscript.variables.set('Math', Math);
-            FunkinLua.hscript.variables.set('PlayfieldRenderer', PlayfieldRenderer);
-            FunkinLua.hscript.variables.set('ModchartUtil', ModchartUtil);
-            FunkinLua.hscript.variables.set('Modifier', Modifier);
-            FunkinLua.hscript.variables.set('NoteMovement', NoteMovement);
-            FunkinLua.hscript.variables.set('NotePositionData', NotePositionData);
-            FunkinLua.hscript.variables.set('ModchartFile', ModchartFile);
+            FunkinLua.instance.hscript.variables.set('Math', Math);
+            FunkinLua.instance.hscript.variables.set('PlayfieldRenderer', PlayfieldRenderer);
+            FunkinLua.instance.hscript.variables.set('ModchartUtil', ModchartUtil);
+            FunkinLua.instance.hscript.variables.set('Modifier', Modifier);
+            FunkinLua.instance.hscript.variables.set('NoteMovement', NoteMovement);
+            FunkinLua.instance.hscript.variables.set('NotePositionData', NotePositionData);
+            FunkinLua.instance.hscript.variables.set('ModchartFile', ModchartFile);
         }
         #end
 

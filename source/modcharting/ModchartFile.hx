@@ -1,4 +1,5 @@
 package modcharting;
+
 import flixel.math.FlxMath;
 import haxe.Exception;
 import haxe.Json;
@@ -17,6 +18,10 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 import hscript.*;
+#if PSYCH
+import backend.ClientPrefs;
+import shaders.ColorSwap;
+#end
 using StringTools;
 
 typedef ModchartJson = 

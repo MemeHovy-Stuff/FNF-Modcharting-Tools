@@ -13,6 +13,7 @@ import game.Conductor;
 #elseif PSYCH
 import objects.Note;
 import states.PlayState;
+import backend.*;
 #else
 import PlayState;
 import Note;
@@ -27,7 +28,7 @@ class ModchartUtil
         //need to test each engine
         //not expecting all to work
         #if PSYCH 
-        return ClientPrefs.downScroll;
+        return ClientPrefs.data.downScroll;
         #elseif LEATHER
         return utilities.Options.getData("downscroll");
         #elseif ANDROMEDA //dunno why youd use this on andromeda but whatever, already got its own cool modchart system
@@ -47,7 +48,7 @@ class ModchartUtil
     public static function getMiddlescroll(instance:ModchartMusicBeatState)
     {
         #if PSYCH 
-        return ClientPrefs.middleScroll;
+        return ClientPrefs.data.middleScroll;
         #elseif LEATHER
         return utilities.Options.getData("middlescroll");
         #else 

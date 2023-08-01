@@ -64,10 +64,12 @@ import states.LoadingState;
 import states.MusicBeatState;
 import substates.MusicBeatSubstate;
 #elseif PSYCH
-import backend.MusicBeatState;
-import backend.Section.SwagSection;
-import backend.Song.SwagSong;
-import backend.MusicBeatSubstate;
+// I got lazy
+import objects.*;
+import backend.*;
+import states.*;
+import flixel.addons.ui.FlxUIDropDownMenu;
+import states.editors.ChartingState;
 #else
 import Section.SwagSection;
 import Song.SwagSong;
@@ -333,7 +335,11 @@ class ModchartEditorState extends MusicBeatState
 			PlayState.SONG = Song.loadFromJson('tutorial');
 
 		Conductor.mapBPMChanges(PlayState.SONG);
+        #if !PSYCH
 		Conductor.changeBPM(PlayState.SONG.bpm);
+        #else
+        Conductor.bpm = PlayState.SONG.bpm;
+        #end
 
         FlxG.mouse.visible = true;
 
@@ -367,7 +373,7 @@ class ModchartEditorState extends MusicBeatState
 
 
         #if PSYCH
-		strumLine = new FlxSprite(ClientPrefs.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, 50).makeGraphic(FlxG.width, 10);
+		strumLine = new FlxSprite(ClientPrefs.data.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, 50).makeGraphic(FlxG.width, 10);
         if(ModchartUtil.getDownscroll(this)) strumLine.y = FlxG.height - 150;
         #else
         strumLine = new FlxSprite(0, 100).makeGraphic(FlxG.width, 10);
@@ -394,10 +400,10 @@ class ModchartEditorState extends MusicBeatState
         //strumLineNotes.cameras = [camHUD];
 		//notes.cameras = [camHUD];
 
-        #if ("flixel-addons" >= "3.0.0")
-        grid = new FlxBackdrop(FlxGraphic.fromBitmapData(createGrid(gridSize, gridSize, Std.int(gridSize*48), gridSize)), FlxAxes.X, 0, 0);
-        #else 
+        #if (flixel_addons < "3.0.0")
         grid = new FlxBackdrop(FlxGraphic.fromBitmapData(createGrid(gridSize, gridSize, Std.int(gridSize*48), gridSize)), 0, 0, true, false);
+        #else 
+        grid = new FlxBackdrop(FlxGraphic.fromBitmapData(createGrid(gridSize, gridSize, Std.int(gridSize*48), gridSize)), 0, 0);
         #end
         
         add(grid);
@@ -796,7 +802,11 @@ class ModchartEditorState extends MusicBeatState
         if (curBpmChange.bpm != Conductor.bpm)
         {
             //trace('changed bpm to ' + curBpmChange.bpm);
+            #if !PSYCH
             Conductor.changeBPM(curBpmChange.bpm);
+            #else
+            Conductor.bpm = curBpmChange.bpm;
+            #end
         }
 
 
@@ -969,7 +979,11 @@ class ModchartEditorState extends MusicBeatState
     {
 
         var songData = PlayState.SONG;
-        Conductor.changeBPM(songData.bpm);
+        #if !PSYCH
+		Conductor.changeBPM(songData.bpm);
+        #else
+        Conductor.bpm = songData.bpm;
+        #end
 
         if (PlayState.SONG.needsVoices)
         {
@@ -1045,7 +1059,7 @@ class ModchartEditorState extends MusicBeatState
                 swagNote.mustPress = gottaHitNote;
                 swagNote.gfNote = (section.gfSection && (songNotes[1]<4));
                 swagNote.noteType = songNotes[3];
-                if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = editors.ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
+                if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
                 #elseif LEATHER 
                 var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, 0, songNotes[4], null, [0], gottaHitNote);
                 swagNote.sustainLength = songNotes[2];
@@ -1111,8 +1125,8 @@ class ModchartEditorState extends MusicBeatState
             if (player < 1)
             {
                 #if PSYCH
-                if(!ClientPrefs.opponentStrums) targetAlpha = 0;
-                else if(ClientPrefs.middleScroll) targetAlpha = 0.35;
+                if(!ClientPrefs.data.opponentStrums) targetAlpha = 0;
+                else if(ClientPrefs.data.middleScroll) targetAlpha = 0.35;
                 #end
             }
 
@@ -1140,8 +1154,8 @@ class ModchartEditorState extends MusicBeatState
 			babyArrow.x += 100 - ((usedKeyCount - 4) * 16) + (usedKeyCount >= 10 ? 30 : 0);
 			babyArrow.x += ((FlxG.width / 2) * player);
             #elseif PSYCH 
-            var babyArrow:StrumNote = new StrumNote(ClientPrefs.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, strumLine.y, i, player);
-            babyArrow.downScroll = ClientPrefs.downScroll;
+            var babyArrow:StrumNote = new StrumNote(ClientPrefs.data.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, strumLine.y, i, player);
+            babyArrow.downScroll = ClientPrefs.data.downScroll;
             babyArrow.alpha = targetAlpha;
             #end
 
@@ -1153,7 +1167,7 @@ class ModchartEditorState extends MusicBeatState
             else
             {
                 #if PSYCH 
-                if(ClientPrefs.middleScroll)
+                if(ClientPrefs.data.middleScroll)
                 {
                     babyArrow.x += 310;
                     if(i > 1) { //Up and Right
@@ -2116,4 +2130,8 @@ class ModchartEditorExitSubstate extends MusicBeatSubstate
         cameras = [FlxG.cameras.list[FlxG.cameras.list.length-1]];
     }
 }
+#end
+
+#if PSYCH
+typedef FlxUIDropDownMenuCustom = FlxUIDropDownMenu;
 #end
